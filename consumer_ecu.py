@@ -14,7 +14,7 @@ sd_options_array = {'Length': None,
                     'Type': None,
                     'Reserved': None,
                     'IPV4_Address': None,
-                    'Reserved': None,
+                    'Reserved2': None,
                     'L4_Proto': None,
                     'Port_Number': None
                     }
@@ -45,13 +45,13 @@ def receive(msg):
               eventgroup_id, array_type=sd_entry_array)
     
     # SD Options Array
-    length = sippacket[45:47]
-    sd_type = sippacket[47:48]
-    reserved = sippacket[48:49]
-    ipv4_addr = sippacket[49:53]
-    reserved2 = sippacket[53:54]
-    l4_proto = sippacket[54:55]
-    port_num = sippacket[55:56]
+    length = sippacket[44:46]
+    sd_type = sippacket[46:47]
+    reserved = sippacket[47:48]
+    ipv4_addr = sippacket[48:52]
+    reserved2 = sippacket[52:53]
+    l4_proto = sippacket[53:54]
+    port_num = sippacket[54:56]
     
     print_val(length, sd_type, reserved, ipv4_addr, reserved2,
               l4_proto, port_num, array_type=sd_options_array)
