@@ -77,7 +77,6 @@ if __name__ == '__main__':
         _, img = cap.read()
         srv.pipeline(img)
         p = Ether() / IP(src='192.168.0.13', dst='192.168.0.116') / UDP(sport=138, dport=5355) / srv.sdp.getSomeip(True)
-        p['SD'].entry_array[0].type
         p.add_payload(srv.detected_check)
         sendp(p, count=1)
 
