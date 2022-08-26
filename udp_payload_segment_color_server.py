@@ -31,16 +31,15 @@ def MakeEthPackage():
                                                                           dport=5900) / MakeSOMEIPPackage()  # com vs com
     return package
 
-
 cap = cv2.VideoCapture(0)
 ext = 7
-cv2.namedWindow('Key Input Window')  # For Key Input(Space_bar, q)
+print('Space to start, q to stop')
 while True:
     key_value = keyboard.read_key()
     if key_value == 'space':
         while cap.isOpened():
             ret, frame = cap.read()
-
+            cv2.imshow('frame', frame)
             # frame = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
             frame = cv2.resize(frame, (100, 100), interpolation=cv2.INTER_CUBIC)
             b_frame, g_frame, r_frame = cv2.split(frame)
@@ -52,8 +51,6 @@ while True:
             b = np.array_split(g_frame_flatten, ext)  # g_frame_flatten을 동일한 길이 7개의 배열로 나눔
             c = np.array_split(r_frame_flatten, ext)  # r_frame_flatten을 동일한 길이 7개의 배열로 나눔
 
-            # print(len(a[0]),len(a[1]))
-
             for i in range(ext):
                 a[i] = np.insert(arr=a[i], obj=0, values=i)  # a[i]에 0번 인덱스를 가지는 곳에 i값을 넣는다.
                 print(len(a[i]))
@@ -63,7 +60,7 @@ while True:
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+        break
 
-cap.releaese()
 cv2.destroyAllWindows()
 sys.exit()
