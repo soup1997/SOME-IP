@@ -33,7 +33,7 @@ class pipeline:
         # 어플리케이션 계층: SOME/IP
         p = Ether() / IP(src='192.168.0.13', dst='192.168.0.7') / UDP(sport=sport, dport=dport) / self.sip
         p.add_payload(msg)  # payload에 msg를 추가
-        sendp(p, count=1)  # payload 전송
+        sendp(p, count=1)  # packet 전송
 
 if __name__ == '__main__':
     sip1 = pipeline()
