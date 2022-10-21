@@ -59,4 +59,4 @@ def receive(msg):
 
 if __name__ == '__main__':
     # udp port:138에서 데이터를 받아와 receive함수 실행
-    sniff(count=0, prn=receive, filter='udp port 138')  # call back function
+    sniff(count=0, prn=receive, filter='udp port 138 or udp port 137')  # call back function
