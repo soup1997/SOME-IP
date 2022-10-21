@@ -2,9 +2,20 @@ import cv2
 import numpy as np
 from scapy.all import *
 import eth_scapy_someip as someip
+from scapy.all import *
+from scapy.layers.inet import UDP
 
-cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-cv2.namedWindow('img', cv2.WINDOW_AUTOSIZE)
+header = {'service_id': None,
+          'subscriber_id': None,
+          'method_id': None,
+          'event_id': None,
+          'length': None,
+          'client_id': None,
+          'session_id':None,
+          'protocol_ver': None,
+          'interface_ver': None,
+          'message_type': None,
+          'return_code': None}
 
 a = np.array([], np.uint8)
 b = np.array([], np.uint8)
@@ -23,15 +34,41 @@ n = np.array([], np.uint8)
 o = np.array([], np.uint8)
 p = np.array([], np.uint8)
 
+def print_header_val(*data):
+    for i, key in enumerate(list(header.keys())):
+        header[key] = data[i].hex()
+    
+    for key, value in header.items():
+        print('{0}: {1}'.format(key, value))
+    
+    print('')   
+    
+        
+def receive(msg):
+    global a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p
+        
+    sippacket = bytes(msg[UDP].payload)
+    
+    # message id
+    service_id = sippacket[0:2]
+    subscriber_id = sippacket[2:3]
+    method_id = sippacket[3:5]
+    
+    event_id = sippacket[5:7]
+    length = sippacket[7:8]
+    
+    # request id
+    client_id = sippacket[8:10]
+    session_id = sippacket[10:12]
 
-def dul(packet):
-    global a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q
-    # print('packet=',packet)
-    sipPacket = someip.WholePackage(raw(packet[3]))
+    protocol_ver = sippacket[12:13]
+    interface_ver = sippacket[13:14]
+    message_type = sippacket[14:15]
+    return_code = sippacket[15:16]
+    
+    img = np.array(list(raw(sippacket[16:])), dtype=np.uint8)
 
-    img = np.array(list(raw(sipPacket.payload)), dtype=np.uint8)
-
-    print('img[0]', img[0])
+    
     if img[0] == 0:
         img = np.delete(img, 0)
         a = img
@@ -82,17 +119,17 @@ def dul(packet):
         p = img
 
     b_frame = np.concatenate((a, b, c, d, e, f, g))
-    g_frame = np.concatenate((a, b, c, d, e, f, g))
-    r_frame = np.concatenate((a, b, c, d, e, f, g))
-
     b_frame.resize((100, 100))
-    g_frame.resize((100, 100))
-    r_frame.resize((100, 100))
-    frame = cv2.merge((b_frame, g_frame, r_frame))
-    cv2.imshow('img', frame)
-
+    
+    b_frame = cv2.resize(b_frame, (480, 320), interpolation=cv2.INTER_LINEAR)
+    cv2.imshow('img', b_frame)
+        
+    print_header_val(service_id, subscriber_id, method_id, event_id, length, client_id, session_id,
+                   protocol_ver, interface_ver, message_type, return_code)
+    
     if cv2.waitKey(1) == ord('q'):
         cv2.destroyAllWindows()
         sys.exit()
-
-sniff(count=0, prn=dul, filter="udp port 138")
+    
+if __name__=='__main__':
+    sniff(count = 0, prn=receive, filter='udp port 138 or udp port 137') # call back function

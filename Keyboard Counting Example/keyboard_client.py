@@ -27,6 +27,7 @@ def print_header_val(*data):
     print('')
 
 
+
 def receive(msg):
     # sip_packet: payload에 담긴 값을 받아옴
     sip_packet = bytes(msg[UDP].payload)

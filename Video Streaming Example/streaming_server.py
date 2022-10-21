@@ -27,7 +27,7 @@ def MakeSOMEIPPackage():
 
 # stack 생성
 def MakeEthPackage():
-    package = Ether() / IP(src="192.168.0.13", dst="192.168.0.116") / UDP(sport=138,
+    package = Ether() / IP(src="192.168.0.13", dst="192.168.0.7") / UDP(sport=138,
                                                                           dport=5900) / MakeSOMEIPPackage()  # com vs com
     return package
 
