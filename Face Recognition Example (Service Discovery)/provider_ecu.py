@@ -99,7 +99,7 @@ class face_recognition(event_group):
 
         elif self.sdp.entry_array[0].type == sd.SDEntry_Service.TYPE_EVTGRP_SUBSCRIBE_ACK:
             print('Now Sending UDP Event Payload')
-            p['UDP'].dport = 5355
+            p['UDP'].sport, p['UDP'].dport = 138, 5355
             _, img = self.cap.read()
             self.processing(img)
             p.add_payload(self.event_string)
