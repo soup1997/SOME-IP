@@ -27,8 +27,8 @@ def MakeSOMEIPPackage():
 
 # stack 생성
 def MakeEthPackage():
-    package = Ether() / IP(src="192.168.0.13", dst="192.168.0.7") / UDP(sport=138,
-                                                                          dport=5900) / MakeSOMEIPPackage()  # com vs com
+    package = Ether() / IP(src="192.168.0.115", dst="192.168.0.209") / UDP(sport=138,
+                                                                          dport=5355) / MakeSOMEIPPackage()
     return package
 
 cap = cv2.VideoCapture(0)
@@ -40,20 +40,14 @@ while True:
         while cap.isOpened():
             ret, frame = cap.read()
             cv2.imshow('frame', frame)
-            # frame = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
             frame = cv2.resize(frame, (100, 100), interpolation=cv2.INTER_CUBIC)
             b_frame, g_frame, r_frame = cv2.split(frame)
             b_frame_flatten = b_frame.reshape(-1)  # flatten , reshape, ravel 중 flatten 은 값복사가 이루어져 메모리가 불안하다.
-            g_frame_flatten = g_frame.reshape(-1)  # flatten , reshape, ravel 중 flatten 은 값복사가 이루어져 메모리가 불안하다.
-            r_frame_flatten = r_frame.reshape(-1)  # flatten , reshape, ravel 중 flatten 은 값복사가 이루어져 메모리가 불안하다.
 
             a = np.array_split(b_frame_flatten, ext)  # b_frame_flatten을 동일한 길이의 7개의 배열로 나눔
-            b = np.array_split(g_frame_flatten, ext)  # g_frame_flatten을 동일한 길이 7개의 배열로 나눔
-            c = np.array_split(r_frame_flatten, ext)  # r_frame_flatten을 동일한 길이 7개의 배열로 나눔
 
             for i in range(ext):
                 a[i] = np.insert(arr=a[i], obj=0, values=i)  # a[i]에 0번 인덱스를 가지는 곳에 i값을 넣는다.
-                print(len(a[i]))
                 package10 = MakeEthPackage()  # UDP 프로토콜 객체 생성
                 package10.add_payload(bytes(a[i]))  # payload에 a[i]를 추가
                 sendp(package10, count=1)  # 1 패킷씩 전송 시작

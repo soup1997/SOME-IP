@@ -120,12 +120,14 @@ def receive(msg):
 
     b_frame = np.concatenate((a, b, c, d, e, f, g))
     b_frame.resize((100, 100))
-    
-    b_frame = cv2.resize(b_frame, (480, 320), interpolation=cv2.INTER_LINEAR)
     cv2.imshow('img', b_frame)
-        
-    print_header_val(service_id, subscriber_id, method_id, event_id, length, client_id, session_id,
+
+    try:    
+        print_header_val(service_id, subscriber_id, method_id, event_id, length, client_id, session_id,
                    protocol_ver, interface_ver, message_type, return_code)
+    
+    except UnicodeDecodeError:
+        pass
     
     if cv2.waitKey(1) == ord('q'):
         cv2.destroyAllWindows()

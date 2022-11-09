@@ -50,11 +50,16 @@ def receive(msg):
     return_code = sip_packet[15:16]
     actual_data = sip_packet[16:].decode()
 
-    print(actual_data) # 실제 데이터 출력
     
-    # 헤더 값 출력
-    print_header_val(service_id, subscriber_id, method_id, event_id, length, client_id, session_id,
-                     protocol_ver, interface_ver, message_type, return_code)
+    try:
+        print(actual_data) # 실제 데이터 출력
+        
+        # 헤더 값 출력
+        print_header_val(service_id, subscriber_id, method_id, event_id, length, client_id, session_id,
+                        protocol_ver, interface_ver, message_type, return_code)
+
+    except UnicodeDecodeError:
+        pass
 
 
 if __name__ == '__main__':

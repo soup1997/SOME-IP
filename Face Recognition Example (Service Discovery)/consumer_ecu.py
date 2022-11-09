@@ -95,23 +95,24 @@ class service_discovery:
             self.comm()
         
     def comm(self):
-        s = Ether() / IP(src = '192.168.0.7', dst='192.168.0.13') / UDP(sport=5355, dport=138) / self.sdp.getSomeip(True)
+        s = Ether() / IP(src = '192.168.0.7', dst='192.168.0.13') / UDP(sport=30490, dport=30490) / self.sdp.getSomeip(True)
         
         if self.sdp.entry_array[0].type is None: # find service
             s['SD'].entry_array[0].type = sd.SDEntry_Service.TYPE_SRV_FINDSERVICE
             print("Sending Find Service")
-            sendp(s, count=1)
+            sendp(s, count=5)
         
         elif self.sdp.entry_array[0].type == sd.SDEntry_Service.TYPE_SRV_OFFERSERVICE:
             s['SD'].entry_array[0].type = sd.SDEntry_Service.TYPE_EVTGRP_SUBSCRIBE
             print("Receiving Offer Service")
             print("Sending Subscribe EventGroup")
-            sendp(s, count=1)
+            sendp(s, count=5)
         
         elif self.sdp.entry_array[0].type == sd.SDEntry_Service.TYPE_EVTGRP_SUBSCRIBE_ACK:
             print("Receiving Subscribe EventGroup ACK")
+            s['UDP'].sport, s['UDP'].dport = 5355, 138
             
 if __name__ == '__main__':
     someip_sd = service_discovery()
     someip_sd.comm()
-    sniff(count=0, prn=someip_sd.receive, filter='udp port 138')
+    sniff(count=0, prn=someip_sd.receive, filter='udp port 138 or udp port 30490')

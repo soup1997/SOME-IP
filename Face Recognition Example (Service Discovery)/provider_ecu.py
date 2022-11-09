@@ -62,7 +62,7 @@ class face_recognition(event_group):
         self.sdp.setEntryArray(entry_array)
         self.sdp.entry_array[0].type = None
 
-        option_array = [sd.SDOption_IP4_EndPoint(addr="192.168.0.7", l4_proto=0x11, port=0xd903)]
+        option_array = [sd.SDOption_IP4_EndPoint(addr="192.168.0.7", l4_proto=0x11, port=5355)]
         self.sdp.setOptionArray(option_array)
 
     def receive(self, msg):
@@ -80,7 +80,7 @@ class face_recognition(event_group):
             self.comm()
 
     def comm(self):
-        p = Ether() / IP(src='192.168.0.13', dst='192.168.0.7') / UDP(sport=138, dport=5355) / self.sdp.getSomeip(True)
+        p = Ether() / IP(src='192.168.0.13', dst='192.168.0.7') / UDP(sport=30490, dport=30490) / self.sdp.getSomeip(True)
 
         if self.sdp.entry_array[0].type is None:
             print('Waiting For Find Service Request...')
@@ -89,16 +89,17 @@ class face_recognition(event_group):
             p['SD'].entry_array[0].type = sd.SDEntry_Service.TYPE_SRV_OFFERSERVICE
             print("Receiving Find Service")
             print("Sending Offer Service")
-            sendp(p, count=1)
+            sendp(p, count=5)
 
         elif self.sdp.entry_array[0].type == sd.SDEntry_EventGroup.TYPE_EVTGRP_SUBSCRIBE:  # Subscribe EventGroup
             p['SD'].entry_array[0].type = sd.SDEntry_Service.TYPE_EVTGRP_SUBSCRIBE_ACK
             print("Receiving Subscribe EventGroup")
             print("Sending SubScribe EventGroup ACK")
-            sendp(p, count=1)
+            sendp(p, count=5)
 
         elif self.sdp.entry_array[0].type == sd.SDEntry_Service.TYPE_EVTGRP_SUBSCRIBE_ACK:
             print('Now Sending UDP Event Payload')
+            p['UDP'].dport = 5355
             _, img = self.cap.read()
             self.processing(img)
             p.add_payload(self.event_string)
@@ -108,4 +109,5 @@ class face_recognition(event_group):
 if __name__ == '__main__':
     srv = face_recognition()
     srv.comm()
-    sniff(count=0, prn=srv.receive, filter='udp port 5355')
+    print('Waiting For Find Service Request...')
+    sniff(count=0, prn=srv.receive, filter='udp port 5355 or udp port 30490')
