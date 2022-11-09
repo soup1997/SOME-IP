@@ -42,7 +42,7 @@ while True:
             cv2.imshow('frame', frame)
             frame = cv2.resize(frame, (100, 100), interpolation=cv2.INTER_CUBIC)
             b_frame, g_frame, r_frame = cv2.split(frame)
-            b_frame_flatten = b_frame.reshape(-1)  # flatten , reshape, ravel 중 flatten 은 값복사가 이루어져 메모리가 불안하다.
+            b_frame_flatten = b_frame.reshape(-1)
 
             a = np.array_split(b_frame_flatten, ext)  # b_frame_flatten을 동일한 길이의 7개의 배열로 나눔
 
