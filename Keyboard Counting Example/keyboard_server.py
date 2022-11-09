@@ -31,9 +31,15 @@ class pipeline:
         # 네트워크 계층: IP(src='192.168.0.13', dst='192.168.0.116')
         # 전송 계층: UDP(sport=138, dport=5355)
         # 어플리케이션 계층: SOME/IP
+<<<<<<< HEAD
         p1 = Ether() / IP(src='192.168.0.115', dst='192.168.0.158') / UDP(sport=sport, dport=dport) / self.sip
         p1.add_payload(msg)  # payload에 msg를 추가
         sendp(p1, count=1)  # payload 전송
+=======
+        p = Ether() / IP(src='192.168.0.13', dst='192.168.0.7') / UDP(sport=sport, dport=dport) / self.sip
+        p.add_payload(msg)  # payload에 msg를 추가
+        sendp(p, count=1)  # packet 전송
+>>>>>>> f99b5b2bf1f59d5671175fe3f5c695d4f33c6301
 
 if __name__ == '__main__':
     sip1 = pipeline()
@@ -46,4 +52,9 @@ if __name__ == '__main__':
         if keyboard.read_key() == 'q':
             print('Stop sending Message')
             del sip1
+<<<<<<< HEAD
             break
+=======
+            del sip2
+            break
+>>>>>>> f99b5b2bf1f59d5671175fe3f5c695d4f33c6301
