@@ -109,5 +109,4 @@ class face_recognition(event_group):
 if __name__ == '__main__':
     srv = face_recognition()
     srv.comm()
-    print('Waiting For Find Service Request...')
     sniff(count=0, prn=srv.receive, filter='udp port 5355 or udp port 30490')
