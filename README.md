@@ -22,5 +22,5 @@ SOME-IP
 │      SOME_IP Protocol Specification.pdf   
 │      
 └─Video Streaming Example   
-        streaming_client.py   
-        streaming_server.py   
+|       streaming_client.py   
+|       streaming_server.py   
